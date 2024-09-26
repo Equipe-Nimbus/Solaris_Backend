@@ -1,0 +1,34 @@
+openapi: 3.0.0
+info:
+  title: API de Imagens INPE
+  version: 1.0.0
+paths:
+  /api/imagens:
+    get:
+      summary: Retorna links de imagens da coleção CB4A-WPM-PCA-FUSED-1
+      parameters:
+        - in: query
+          name: bbox
+          schema:
+            type: string
+          required: true
+          description: Coordenadas de limite da área
+        - in: query
+          name: datetime
+          schema:
+            type: string
+          required: true
+          description: Intervalo de tempo no formato ISO 8601
+      responses:
+        '200':
+          description: Lista de URLs de imagens do tipo thumbnail
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Parâmetros inválidos
+        '500':
+          description: Erro interno do servidor
