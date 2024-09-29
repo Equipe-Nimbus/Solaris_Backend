@@ -12,7 +12,10 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
   try {
     const imagens = await obterImagens(bbox as string, datetime as string);
     const imagensProcessadas = await processarImagens(imagens);
-    res.status(200).json(imagensProcessadas);
+    res.status(200).json({
+      imagensOriginais: imagens,
+      imagensProcessadas: imagensProcessadas
+    });
   } catch (erro) {
     res.status(500).json({ erro: "Erro ao buscar e processar as imagens." });
   }
