@@ -9,14 +9,29 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
+  let imagens;
   try {
-    const imagens = await obterImagens(bbox as string, datetime as string);
-    const imagensProcessadas = await processarImagens(imagens);
-    res.status(200).json({
-      imagensOriginais: imagens,
-      imagensProcessadas: imagensProcessadas
-    });
+    imagens = await obterImagens(bbox as string, datetime as string);
+    console.log("links: ", imagens);
   } catch (erro) {
-    res.status(500).json({ erro: "Erro ao buscar e processar as imagens." });
+    res.status(500).json({ erro: "Erro ao obter as imagens." });
+    return;
   }
+
+  let imagensProcessadas;
+  try {
+    imagensProcessadas = await processarImagens(imagens);
+  } catch (erro) {
+    res.status(500).json({ erro: "Erro ao processar as imagens." });
+    return;
+  }
+
+  const imagensCombinadas = imagens.map((imagemOriginal, index) => ({
+    imagemOriginal,
+    imagemProcessada: imagensProcessadas[index]
+  }));
+
+  res.status(200).json({
+    imagens: imagensCombinadas
+  });
 };

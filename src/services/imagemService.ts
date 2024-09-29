@@ -5,7 +5,14 @@ export const obterImagens = async (bbox: string, datetime: string): Promise<stri
   
   const dados = await api(url);
 
-  const linksImagens = dados.features.map((feature: any) => feature.assets.thumbnail.href);
+  // Ordenar pela data
+  const featuresOrdenadas = dados.features.sort((a: any, b: any) => {
+    const dataA = new Date(a.properties.datetime);
+    const dataB = new Date(b.properties.datetime);
+    return dataA.getTime() - dataB.getTime();
+  });
+
+  const linksImagens = featuresOrdenadas.map((feature: any) => feature.assets.thumbnail.href);
   
   return linksImagens;
 };
