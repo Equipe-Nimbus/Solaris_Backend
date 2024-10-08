@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 import YAML from "yaml";
+import { AppDataSource } from "./config/data-source";
 
 dotenv.config();
 
@@ -27,7 +28,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/imagens", imagemRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Rodando na porta ${PORT}`);
-  console.log(`swagger: http://localhost:8000/api-docs`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Rodando na porta ${PORT}`);
+      console.log(`swagger: http://localhost:8000/api-docs`);
+    });
+  })
+  .catch((error) => console.log("Erro ao inicializar o banco de dados", error));
