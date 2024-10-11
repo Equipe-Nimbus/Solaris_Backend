@@ -1,16 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Requisicao } from './requisicao';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id_user!: string;
 
   @Column()
-  name!: string;
+  nome_user!: string;
 
   @Column({ unique: true })
-  email!: string;
+  email_user!: string;
 
   @Column()
-  password!: string;
+  senha_user!: string;
+
+  @Column({ unique: true })
+  cpf_user!: string;
+
+  @OneToMany(() => Requisicao, (requisicao) => requisicao.User)
+  requisicoes!: Requisicao[];
 }
