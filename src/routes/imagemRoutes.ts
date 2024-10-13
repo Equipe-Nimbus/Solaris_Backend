@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { buscarImagens } from "../controllers/imagemController";
+import { buscarImagens } from "../controllers";
 
 const router = Router();
 

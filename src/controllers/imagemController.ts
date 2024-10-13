@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { obterImagens, processarImagens } from "../services";
+import { obterImagens, processarImagens, combinarImagens } from "../services";
 
 export const buscarImagens = async (req: Request, res: Response): Promise<void> => {
   const { bbox, datetime } = req.query;
@@ -26,10 +26,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const imagensCombinadas = imagens.map((imagemOriginal, index) => ({
-    imagemOriginal,
-    imagemProcessada: imagensProcessadas[index]
-  }));
+  const imagensCombinadas = combinarImagens(imagens, imagensProcessadas);
 
   res.status(200).json({
     imagens: imagensCombinadas

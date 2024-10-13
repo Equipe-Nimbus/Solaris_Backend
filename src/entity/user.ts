@@ -3,7 +3,7 @@ import { Requisicao } from './requisicao';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id_user!: string;
 
   @Column()

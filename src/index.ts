@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { imagemRoutes } from "./routes";
+import { imagemRoutes, userRoutes } from "./routes";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
@@ -27,6 +27,7 @@ const swaggerDocument = YAML.parse(swaggerFile);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/imagens", imagemRoutes);
+app.use("/api/usuarios", userRoutes);
 
 AppDataSource.initialize()
   .then(() => {

@@ -16,3 +16,10 @@ export const obterImagens = async (bbox: string, datetime: string): Promise<stri
   
   return linksImagens;
 };
+
+export const combinarImagens = (imagensOriginais: string[], imagensProcessadas: string[]): { imagemOriginal: string, imagemProcessada: string }[] => {
+  return imagensOriginais.map((imagemOriginal, index) => ({
+    imagemOriginal,
+    imagemProcessada: imagensProcessadas[index]
+  }));
+};

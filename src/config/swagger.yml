@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: API de Imagens INPE
+  title: BACKEND
   version: 1.0.0
 paths:
   /api/imagens:
@@ -10,13 +10,13 @@ paths:
         - in: query
           name: bbox
           schema:
-            type: string
+            $ref: '#/components/schemas/ImagemRequest/properties/bbox'
           required: true
           description: Coordenadas de limite da área
         - in: query
           name: datetime
           schema:
-            type: string
+            $ref: '#/components/schemas/ImagemRequest/properties/datetime'
           required: true
           description: Intervalo de tempo no formato ISO 8601
       responses:
@@ -25,10 +25,81 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                $ref: '#/components/schemas/ImagensResponse'
         '400':
           description: Parâmetros inválidos
         '500':
           description: Erro interno do servidor
+  /api/usuarios:
+    post:
+      summary: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoUsuario'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NovoUsuarioResponse'
+        '400':
+          description: Requisição inválida
+        '500':
+          description: Erro interno do servidor
+components:
+  schemas:
+    ImagemRequest:
+      type: object
+      properties:
+        bbox:
+          type: string
+          example: "-73.935242,40.730610,-73.935242,40.730610"
+        datetime:
+          type: string
+          example: "2021-01-01T00:00:00Z/2021-12-31T23:59:59Z"
+    ImagensResponse:
+      type: array
+      items:
+        type: string
+        description: array de objetos com as imagens tratadas e links das originais agrupadas
+    NovoUsuario:
+      type: object
+      properties:
+        nome_user:
+          type: string
+          description: Nome do usuário
+        email_user:
+          type: string
+          description: Email do usuário
+        senha_user:
+          type: string
+          description: Senha do usuário
+        cpf_user:
+          type: string
+          description: CPF do usuário
+      required:
+        - nome_user
+        - email_user
+        - senha_user
+        - cpf_user
+    NovoUsuarioResponse:
+      type: object
+      properties:
+        mensagem:
+          type: string
+          example: "Usuário criado com sucesso"
+        usuario:
+          type: object
+          properties:
+            id_usuario:
+              type: integer
+            nome_usuario:
+              type: string
+            email_usuario:
+              type: string
+            cpf_usuario:
+              type: string
