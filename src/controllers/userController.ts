@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import { criarUser } from "../services/userService";
+import { userSchema } from "./validators";
 
 export const criarNovouser = async (req: Request, res: Response): Promise<void> => {
-  const { nome_user, email_user, senha_user, cpf_user } = req.body;
+  const { error } = userSchema.validate(req.body);
 
-  if (!nome_user || !email_user || !senha_user || !cpf_user) {
-    res.status(400).json({ erro: "Todos os campos são obrigatórios." });
+  if (error) {
+    res.status(400).json({ erro: "Dados inválidos", detalhes: error.details });
     return;
   }
+
+  const { nome_user, email_user, senha_user, cpf_user } = req.body;
 
   try {
     const user = await criarUser({ nome_user, email_user, senha_user, cpf_user });
