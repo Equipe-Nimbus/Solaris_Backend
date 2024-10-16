@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import { imagemRoutes, userRoutes } from "./routes";
 import swaggerUi from "swagger-ui-express";
@@ -7,10 +6,9 @@ import fs from "fs";
 import path from "path";
 import YAML from "yaml";
 import { AppDataSource } from "./config/data-source";
+import { carregaEnv } from "./utils";
 
-dotenv.config();
-
-const PORT = process.env.PORT || 8000;
+const PORT = carregaEnv("PORT");
 const app = express();
 
 app.use(express.json());

@@ -15,3 +15,11 @@ export const criarUser = async (dadosUser: Partial<User>): Promise<User> => {
     throw new Error(mensagemErro);
   }
 };
+
+export const getUserByEmail = async (email_user: string): Promise<User | null> => {
+  const userRepository = AppDataSource.getRepository(User);
+  
+  const user = await userRepository.findOneBy({ email_user });
+  
+  return user || null;
+};
