@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import { carregaEnv } from "../utils";
+import { carregaEnv } from "../utils/carregaEnv";
 
 const secret = carregaEnv("JWT_SECRET");
 
 if (!secret) {
-  throw new Error("JWT_SECRET não definida no arquivo .env");
+  throw new Error("A chave JWT_SECRET não está definida corretamente no .env");
 }
 
 export const gerarToken = (id: number, nome: string): string => {

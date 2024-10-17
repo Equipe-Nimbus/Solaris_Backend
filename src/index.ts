@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { imagemRoutes, userRoutes } from "./routes";
+import { imagemRoutes, userRoutes, loginRoutes } from "./routes";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
@@ -26,6 +26,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/imagens", imagemRoutes);
 app.use("/api/usuarios", userRoutes);
+app.use("/api/login", loginRoutes);
 
 AppDataSource.initialize()
   .then(() => {
