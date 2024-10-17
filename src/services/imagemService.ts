@@ -1,8 +1,9 @@
+import { Image } from "../types/image";
 import { api } from "../utils";
 
-export const obterImagens = async (bbox: string, datetime: string): Promise<string[]> => {
+export const obterImagens = async (bbox: string, datetime: string): Promise<Image[]> => {
   const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}`;
-  
+
   const dados = await api(url);
 
   // Ordenar pela data
@@ -12,14 +13,14 @@ export const obterImagens = async (bbox: string, datetime: string): Promise<stri
     return dataA.getTime() - dataB.getTime();
   });
 
-  const linksImagens = featuresOrdenadas.map((feature: any) => feature.assets.thumbnail.href);
-  
-  return linksImagens;
-};
+  const imagens = featuresOrdenadas.map((feature: any) => {
+    return {
+      thumbnail: feature.assets.thumbnail.href,
+      tiff: feature.assets.tci.href,
+      data: feature.properties.datetime,
+      bbox: feature.bbox
+    };
+  });
 
-export const combinarImagens = (imagensOriginais: string[], imagensProcessadas: string[]): { imagemOriginal: string, imagemProcessada: string }[] => {
-  return imagensOriginais.map((imagemOriginal, index) => ({
-    imagemOriginal,
-    imagemProcessada: imagensProcessadas[index]
-  }));
+  return imagens;
 };
