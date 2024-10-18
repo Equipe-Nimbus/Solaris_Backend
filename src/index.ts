@@ -1,15 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-import { imagemRoutes } from "./routes";
+import { imagemRoutes, userRoutes, loginRoutes } from "./routes";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 import YAML from "yaml";
+import { AppDataSource } from "./config/data-source";
+import { carregaEnv } from "./utils";
 
-dotenv.config();
-
-const PORT = process.env.PORT || 8000;
+const PORT = carregaEnv("PORT");
 const app = express();
 
 app.use(express.json());
@@ -26,8 +25,14 @@ const swaggerDocument = YAML.parse(swaggerFile);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/imagens", imagemRoutes);
+app.use("/api/usuarios", userRoutes);
+app.use("/api/login", loginRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Rodando na porta ${PORT}`);
-  console.log(`swagger: http://localhost:8000/api-docs`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Rodando na porta ${PORT}`);
+      console.log(`swagger: http://localhost:8000/api-docs`);
+    });
+  })
+  .catch((error) => console.log("Erro ao inicializar o banco de dados", error));

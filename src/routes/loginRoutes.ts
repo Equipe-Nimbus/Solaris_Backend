@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { buscarImagens } from "../controllers";
+import { loginUser } from "../controllers";
 
 const router = Router();
 
-router.get("/", buscarImagens);
+router.post("/", loginUser);
 
 export default router;
