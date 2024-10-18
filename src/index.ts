@@ -7,6 +7,7 @@ import path from "path";
 import YAML from "yaml";
 import { AppDataSource } from "./config/data-source";
 import { carregaEnv } from "./utils";
+//import { authenticateJWT } from "./middlewares";
 
 const PORT = carregaEnv("PORT");
 const app = express();
