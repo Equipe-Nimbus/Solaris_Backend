@@ -19,5 +19,5 @@ export class User {
   cpf_user!: string;
 
   @OneToMany(() => Requisicao, (requisicao) => requisicao.User)
-  requisicoes!: Requisicao[];
+  requisicoes: Requisicao[];
 }
