@@ -4,7 +4,7 @@ import { Requisicao } from './requisicao';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id_user!: string;
+  id_user!: number;
 
   @Column()
   nome_user!: string;
