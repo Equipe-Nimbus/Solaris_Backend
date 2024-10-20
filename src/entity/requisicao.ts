@@ -14,7 +14,7 @@ export class Requisicao {
   data_requisicao!: number;
 
   @Column('text', { array: true })
-  bbox_requisicao!: string[];
+  bbox_requisicao!: number[];
 
   @Column({ type: 'bigint' })
   tempo_inicio_requisicao!: number;
