@@ -29,7 +29,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userId = parseInt(user.id_user, 10);
+    const userId = user.id_user;
     const token = gerarToken(userId, user.nome_user);
 
     res.status(200).json({ token, id: userId, nome_user: user.nome_user });
