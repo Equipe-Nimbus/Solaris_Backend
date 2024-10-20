@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { getUserById, obterImagens, processarImagens } from "../services";
+import { atualizaLinksImagem, getUserById, obterImagens, processarImagens } from "../services";
 import { Image } from "../types/image";
 import { criarRequisicao } from "../services/requisicao/criaRequisicao";
 import { Requisicao } from "../entity";
-import { atualizaMascaraImagem } from "../services/imagem/atualizaMascaraImagem";
 import { atualizaStatusRequisicao } from "../services/requisicao/atualizaStatusRequisicao";
+import { ResponseIA } from "../types/responseIA";
 
 export const buscarImagens = async (req: Request, res: Response): Promise<void> => {
   const { bbox, datetime, id } = req.query;
@@ -31,24 +31,29 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
-  let imagensProcessadas;
+  let respostaIA;
+  let linksPNG: string[] = [];
+  let downloadLinks: string[] = [];
   try {
-    imagensProcessadas = await processarImagens(imagens);
+    respostaIA = await processarImagens(imagens) as ResponseIA;
+    if (respostaIA != null || respostaIA != undefined){
+      downloadLinks = respostaIA.download_links;
+      linksPNG = respostaIA.pngs;
+    }    
   } catch (erro) {
-    res.status(500).json({ erro: "Erro ao processar as imagens." });
+    res.status(500).json({ erro });
     return;
   }
-  if(imagensProcessadas != null) {
-    imagens.forEach((imagem, index) => {
-      imagem.mascara = imagensProcessadas[index];
-      const mascara = imagem.mascara;
-      atualizaMascaraImagem(mascara, imagem.id);      
+  if(respostaIA != null || respostaIA != undefined) {
+    imagens.forEach(async (imagem, index) => {
+      await atualizaLinksImagem(linksPNG[index], downloadLinks[index], imagem.id);      
     }
   )};
 
   atualizaStatusRequisicao(requisicao);
-  
+
   res.status(200).json({
     imagens
   });
 }
+

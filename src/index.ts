@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "https://demo9989392.mockable.io/gerarMascaraTiff"
   ],
 }));
 

@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../config";
-import { Imagem, Requisicao } from "../../entity";
+import { Requisicao } from "../../entity";
 
 export const atualizaStatusRequisicao = async (requisicao: Requisicao): Promise<void> => {
     const requisicaoRepositorio = AppDataSource.getRepository(Requisicao);

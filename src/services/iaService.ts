@@ -1,20 +1,28 @@
 import axios from 'axios';
+import https from 'https';
 import { Image } from '../types/image';
+import { ResponseIA } from '../types/responseIA';
 
-export const processarImagens = async (imagens: Image[]): Promise<string[] | void> => {
+export const processarImagens = async (imagens: Image[]): Promise<ResponseIA | void> => {
   try {
     let linkImagens: string[] = [];
-    imagens.forEach((imagem) => {
+    imagens.forEach(async (imagem) => {
       if (imagem.mascara === undefined || imagem.mascara === null) {
-        linkImagens.push(imagem.thumbnail);
+        const agent = new https.Agent({  
+          rejectUnauthorized: false
+        });
+        
+        const response = await axios.get('https://demo9989392.mockable.io/gerarMascaraTiff', { httpsAgent: agent });
+        const { download_links, pngs} = response.data;
+        return { download_links, pngs};
+        
       }
     });
-    if (linkImagens.length != 0) {
-      const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { links: linkImagens });
-      // Mudar a lógica do recebimento da IA;
-      return response.data.svgs;
+    console.log(linkImagens.length);
+    if (linkImagens.length > 0) {
     }
-  } catch (error) {
-    throw new Error('Erro ao processar as imagens.');
+  } catch (error: any) {
+    // Captura a mensagem de erro de forma mais clara
+    throw new Error(`Erro ao processar imagens: ${error.message || error}`);
   }
 };

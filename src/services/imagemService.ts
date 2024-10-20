@@ -4,6 +4,7 @@ import { api } from "../utils";
 import { getImageById } from "./imagem/getImageById";
 import { criarImagem } from "./imagem/criarImagem";
 import { relacionaImagemRequisicao } from "./imagem/relacionaImagemRequisicao";
+import { link } from "joi";
 
 export const obterImagens = async (bbox: string, datetime: string, requisicao: Requisicao): Promise<Image[]> => {
   const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}`;
@@ -28,6 +29,7 @@ export const obterImagens = async (bbox: string, datetime: string, requisicao: R
         data: feature.properties.datetime,
         bbox: feature.bbox,
         mascara: imagemSalva.mascaras_imagem,
+        download_links: imagemSalva.links_download_imagem,
       };
     }
     criarImagem(feature.id, feature.bbox, feature.assets.tci.href, requisicao);

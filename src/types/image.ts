@@ -4,5 +4,6 @@ export interface Image {
     tiff: string;
     data: string;
     bbox: number[]
-    mascara?: string;
+    mascara?: string[];
+    download_links?: string[];
 }

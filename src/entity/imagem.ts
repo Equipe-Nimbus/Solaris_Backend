@@ -13,7 +13,10 @@ export class Imagem {
   bbox_imagem!: number[];
 
   @Column('text', { array: true, nullable: true })
-  mascaras_imagem: string[];
+  mascaras_imagem: string;
+
+  @Column('text', {array: true, nullable: true})
+  links_download_imagem: string;
 
   @ManyToMany(() => Requisicao, { cascade: true, })
   @JoinTable()

@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../config";
-import { Imagem, Requisicao, User } from "../../entity";
+import { Requisicao, User } from "../../entity";
 import { converteDatetime } from "../converteDatetime";
 import { montaObjetoRequisicao } from "./montaObjetoRequisicao";
 
