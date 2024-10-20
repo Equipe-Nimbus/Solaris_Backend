@@ -7,15 +7,18 @@ export class Imagem {
   id_imagem!: string;
 
   @Column('text')
-  link_imagem!: string;
+  link_imagem_tiff!: string;
+
+  @Column('text')
+  link_imagem_thumbnail!: string;
 
   @Column('numeric', { array: true })
   bbox_imagem!: number[];
 
-  @Column('text', { array: true, nullable: true })
+  @Column('text', {nullable: true })
   mascaras_imagem: string;
 
-  @Column('text', {array: true, nullable: true})
+  @Column('text', {nullable: true})
   links_download_imagem: string;
 
   @ManyToMany(() => Requisicao, { cascade: true, })

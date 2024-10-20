@@ -1,6 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, } from 'typeorm';
 import { User } from './user';
-import { Imagem } from './imagem';
 
 @Entity()
 export class Requisicao {
@@ -18,6 +17,9 @@ export class Requisicao {
 
   @Column({ type: 'bigint' })
   tempo_final_requisicao!: number;
+
+  @Column('numeric', { array: true })
+  bbox_requisicao!: number[];
 
   @ManyToOne(() => User, (User) => User.requisicoes)
   User!: User;

@@ -1,28 +1,41 @@
 import axios from 'axios';
 import https from 'https';
 import { Image } from '../types/image';
-import { ResponseIA } from '../types/responseIA';
 
-export const processarImagens = async (imagens: Image[]): Promise<ResponseIA | void> => {
+export const processarImagens = async (imagens: Image[]): Promise<Image[] | void> => {
+
   try {
-    let linkImagens: string[] = [];
-    imagens.forEach(async (imagem) => {
-      if (imagem.mascara === undefined || imagem.mascara === null) {
-        const agent = new https.Agent({  
-          rejectUnauthorized: false
-        });
-        
-        const response = await axios.get('https://demo9989392.mockable.io/gerarMascaraTiff', { httpsAgent: agent });
-        const { download_links, pngs} = response.data;
-        return { download_links, pngs};
-        
+    const imagensProcessadas: Image[] = [];
+
+    let contador = 0;    
+    let linksTiff: string[] = [];
+    imagens.forEach((imagem) => {
+      if (imagem.mascara == undefined || imagem.mascara == null) {        
+        imagensProcessadas.push(imagem);
+        linksTiff.push(imagem.tiff);
+        contador ++;
+      } else {
+        imagensProcessadas.push(imagem);
+        contador++;
       }
     });
-    console.log(linkImagens.length);
-    if (linkImagens.length > 0) {
-    }
+
+    const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { linksTiff });
+
+    const { download_links, pngs} = response.data;
+
+    contador = 0;
+    imagensProcessadas.forEach((imagem) => {
+      if (imagem.mascara == null || imagem.mascara == undefined) {
+        imagem.mascara = pngs[contador];
+        imagem.download_links = download_links[contador];
+
+        contador ++;
+      } contador ++;
+    })
+
+    return imagensProcessadas;
   } catch (error: any) {
-    // Captura a mensagem de erro de forma mais clara
     throw new Error(`Erro ao processar imagens: ${error.message || error}`);
   }
 };
