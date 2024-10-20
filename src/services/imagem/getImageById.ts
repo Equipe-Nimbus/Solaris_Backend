@@ -1,7 +1,7 @@
 import { AppDataSource } from "../../config";
 import { Imagem } from "../../entity";
 
-export const consultaImagem = async (idImagem: string): Promise<boolean> =>  {
+export const getImageById = async (idImagem: string): Promise<Imagem | null> =>  {
     const imageRepositorio = AppDataSource.getRepository(Imagem);
    
     const imagemRecuperada = await imageRepositorio.findOne({
@@ -10,6 +10,6 @@ export const consultaImagem = async (idImagem: string): Promise<boolean> =>  {
         },
     });
 
-    return imagemRecuperada !== null;
+    return imagemRecuperada;
     
 };

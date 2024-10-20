@@ -2,7 +2,7 @@ import { AppDataSource } from "../../config";
 import { Imagem, Requisicao } from "../../entity";
 import { montaObjetoImagem } from "./montaObjetoImagem";
 
-export const criarImagem = async (idImagem: string, bboxImagem: number[], linkImagem: string, requisicao: Requisicao): Promise<Imagem | void> => {
+export const criarImagem = async (idImagem: string, bboxImagem: number[], linkImagem: string, requisicao: Requisicao): Promise<void> => {
     let imagem = new Imagem();
     imagem = montaObjetoImagem(imagem, idImagem, linkImagem, bboxImagem);
 
@@ -13,7 +13,6 @@ export const criarImagem = async (idImagem: string, bboxImagem: number[], linkIm
             relation(Imagem, "requisicoes").
             of(imagem).
             add(requisicao);
-        return imagem;
     } catch (error) {
         console.log(error);
     };
