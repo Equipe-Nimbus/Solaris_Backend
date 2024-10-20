@@ -1,7 +1,7 @@
 import { AppDataSource } from "../../config";
 import { User } from "../../entity";
 
-export const getUserById = async (idUsuario: string): Promise<User | null> => {
+export const getUserById = async (idUsuario: number): Promise<User | null> => {
     const userRepositorio = AppDataSource.getRepository(User);
   
     const usuarioRecuperado = await userRepositorio.findOne({

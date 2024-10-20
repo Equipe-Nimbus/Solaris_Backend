@@ -13,7 +13,8 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
     return;
   }
 
-  const usuario = await getUserById(id as string);
+  const idUsuario = Number(id);
+  const usuario = await getUserById(idUsuario);
 
   if (usuario == null) {
     throw new Error("Usuário não identificado")
