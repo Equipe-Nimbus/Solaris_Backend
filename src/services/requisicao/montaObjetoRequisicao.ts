@@ -5,7 +5,7 @@ export const montaObjetoRequisicao =  (requisicao: Requisicao, dadosRequisao: an
     requisicao.tempo_inicio_requisicao = dadosRequisao.dataInicioRequisicao;
     requisicao.tempo_final_requisicao = dadosRequisao.dataFinalRequisicao;
     requisicao.bbox_requisicao = bbox;
-    requisicao.User = usuario;
+    requisicao.user = usuario;
 
     return requisicao;
 }

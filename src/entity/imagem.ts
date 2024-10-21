@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany } from 'typeorm';
 import { Requisicao } from './requisicao';
 
 @Entity()
@@ -21,7 +21,6 @@ export class Imagem {
   @Column('text', {nullable: true})
   links_download_imagem: string;
 
-  @ManyToMany(() => Requisicao, { cascade: true, })
-  @JoinTable()
+  @ManyToMany(() => Requisicao, (requisicao) => requisicao.imagens)
   requisicoes: Requisicao[];
-}
+  }
