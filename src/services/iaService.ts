@@ -8,11 +8,11 @@ export const processarImagens = async (imagens: Image[]): Promise<Image[] | void
     const imagensProcessadas: Image[] = [];
 
     let contador = 0;    
-    let linksTiff: string[] = [];
+    let links: string[] = [];
     imagens.forEach((imagem) => {
       if (imagem.mascara == undefined || imagem.mascara == null) {        
         imagensProcessadas.push(imagem);
-        linksTiff.push(imagem.tiff);
+        links.push(imagem.tiff);
         contador ++;
       } else {
         imagensProcessadas.push(imagem);
@@ -20,7 +20,8 @@ export const processarImagens = async (imagens: Image[]): Promise<Image[] | void
       }
     });
 
-    const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { linksTiff });
+    const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { links });
+    console.log("response: ", response.data);
 
     const { download_links, pngs} = response.data;
 

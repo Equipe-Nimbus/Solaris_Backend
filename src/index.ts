@@ -8,7 +8,7 @@ import YAML from "yaml";
 import { AppDataSource } from "./config/data-source";
 import { carregaEnv } from "./utils";
 import requisicaoRoutes from "./routes/requisicaoRoutes";
-//import { authenticateJWT } from "./middlewares";
+import { authenticateJWT } from "./middlewares";
 
 const PORT = carregaEnv("PORT");
 const app = express();
@@ -27,10 +27,10 @@ const swaggerDocument = YAML.parse(swaggerFile);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api/imagens", imagemRoutes);
+app.use("/api/imagens", authenticateJWT, imagemRoutes);
 app.use("/api/usuarios", userRoutes);
 app.use("/api/login", loginRoutes);
-app.use("/api/requisicao", requisicaoRoutes)
+app.use("/api/requisicao",  authenticateJWT, requisicaoRoutes)
 
 AppDataSource.initialize()
   .then(() => {

@@ -6,7 +6,7 @@ import { criarImagem } from "./imagem/criarImagem";
 
 export const obterImagens = async (bbox: string, datetime: string, requisicao: Requisicao): Promise<Image[] | void> => {
   try {    
-    const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}`;
+    const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}&limit=1`;
   
     const dados = await api(url);
   
