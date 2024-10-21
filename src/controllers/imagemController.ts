@@ -25,7 +25,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
   let imagens: Image[];
   try {
     imagens = await obterImagens(bbox as string, datetime as string, requisicao as Requisicao) as Image[];
-    console.log("links: ", imagens);
+    //console.log("links: ", imagens);
   } catch (erro) {
     res.status(500).json({ erro: "Erro ao obter as imagens." });
     return;

@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
 import { User } from './user';
+import { Imagem } from './imagem';
 
 @Entity()
 export class Requisicao {
   @PrimaryGeneratedColumn('uuid')
   id_requisicao!: string;
 
-  @Column({ type: 'boolean', default: false})
+  @Column({ type: 'boolean', default: false })
   status_requisicao!: boolean;
 
   @Column({ type: 'bigint' })
@@ -23,4 +24,7 @@ export class Requisicao {
 
   @ManyToOne(() => User, (User) => User.requisicoes)
   User!: User;
+
+  @ManyToMany(() => Imagem, (imagem) => imagem.requisicoes)
+  imagens!: Imagem[];
 }
