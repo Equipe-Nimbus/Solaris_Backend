@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { User } from './user';
 import { Imagem } from './imagem';
 
@@ -22,9 +22,10 @@ export class Requisicao {
   @Column('numeric', { array: true })
   bbox_requisicao!: number[];
 
-  @ManyToOne(() => User, (User) => User.requisicoes)
-  User!: User;
+  @ManyToOne(() => User, (user) => user.requisicoes)
+  user!: User;
 
   @ManyToMany(() => Imagem, (imagem) => imagem.requisicoes)
+  @JoinTable()
   imagens!: Imagem[];
 }

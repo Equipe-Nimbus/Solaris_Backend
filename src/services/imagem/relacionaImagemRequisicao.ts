@@ -10,7 +10,7 @@ export const relacionaImagemRequisicao = async (imagemId: string, requisicao: Re
     console.log(imagemRecuperada);
 
     await imagemRepositorio.createQueryBuilder().
-                relation(Imagem, "requisicoes").
-                of(imagemRecuperada).
-                add(requisicao);
+                relation(Requisicao, "imagens").
+                of(requisicao).
+                add(imagemRecuperada);
 }

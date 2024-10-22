@@ -18,6 +18,6 @@ export class User {
   @Column({ unique: true })
   cpf_user!: string;
 
-  @OneToMany(() => Requisicao, (requisicao) => requisicao.User)
+  @OneToMany(() => Requisicao, (requisicao) => requisicao.user)
   requisicoes: Requisicao[];
 }

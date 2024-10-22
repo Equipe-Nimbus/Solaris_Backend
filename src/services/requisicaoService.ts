@@ -6,7 +6,7 @@ import { unix_to_date } from "../utils/conversorUnixEmDate";
 export const getRequisicaoByUser = async (idUsuario: number): Promise<ListaRequisicao> => {
     const requisicaoRepository = AppDataSource.getRepository(Requisicao);
     
-    const requisicao = await requisicaoRepository.find({ where:{User:{id_user:idUsuario}} });
+    const requisicao = await requisicaoRepository.find({ where:{user:{id_user:idUsuario}} });
     
     return formataListaRequisicaoByUser(requisicao);
   };

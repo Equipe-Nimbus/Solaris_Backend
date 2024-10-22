@@ -10,9 +10,9 @@ export const criarImagem = async (idImagem: string, bboxImagem: number[], linkIm
         const imagemRepositorio = AppDataSource.getRepository(Imagem);
         await imagemRepositorio.save(imagem);
         await imagemRepositorio.createQueryBuilder().
-            relation(Imagem, "requisicoes").
-            of(imagem).
-            add(requisicao);
+            relation(Requisicao, "imagens").
+            of(requisicao).
+            add(imagem);
     } catch (error) {
         console.log(error);
     };
