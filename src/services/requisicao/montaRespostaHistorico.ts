@@ -23,6 +23,7 @@ export const obterRequisicaoComImagens = async (id_requisicao: string) => {
       data_requisicao: unix_to_date(requisicao.data_requisicao),
       tempo_inicio_requisicao: unix_to_date(requisicao.tempo_inicio_requisicao),
       tempo_final_requisicao: unix_to_date(requisicao.tempo_final_requisicao),
+      bbox_requisicao: requisicao.bbox_requisicao,
       imagens: requisicao.imagens.map((imagem: Imagem) => ({
         id: imagem.id_imagem,
         tiff: imagem.link_imagem_tiff,
