@@ -1,40 +1,28 @@
-import axios from 'axios';
 import { Image } from '../types/image';
+import { Queue, QueueEvents } from 'bullmq';
+import { redis } from '../config/redisConfig';
 
-export const processarImagens = async (imagens: Image[]): Promise<Image[] | void> => {
+const imagemFila = new Queue('imagemFila', { connection: redis});
+const queueEvents = new QueueEvents('imagemFila', { connection: redis });
 
-  try {
-    const imagensProcessadas: Image[] = [];
-
-    let contador = 0;    
-    let links: string[] = [];
-    imagens.forEach((imagem) => {
-      if (imagem.mascara == undefined || imagem.mascara == null) {        
-        imagensProcessadas.push(imagem);
-        links.push(imagem.tiff);
-      } else {
-        imagensProcessadas.push(imagem);
-      }
-    });
-
-    if(links.length > 0) {
-      const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { links });
-      console.log("response: ", response.data);
-
-      const { download_links, pngs} = response.data;
-
-      imagensProcessadas.forEach((imagem) => {
-        if (imagem.mascara == null || imagem.mascara == undefined) {
-          imagem.mascara = pngs[contador];
-          imagem.download_links = download_links[contador];
+export const processarImagens = async (imagens: Image[]): Promise<Image[]> => {
+  try {  
+    const job = await imagemFila.add('processarImagemJob', {imagens});
+   
   
-          contador ++;
-        } else {
-          contador ++;
-        } 
-      })
-    }
-    return imagensProcessadas;
+    return new Promise((resolve, reject) => {
+      queueEvents.on('completed', ({ jobId, returnvalue }) => {
+        if (jobId === job.id) {
+          resolve(returnvalue as unknown as Image[]);
+        }
+      });
+  
+      queueEvents.on('failed', ({ jobId, failedReason }) => {
+        if (jobId === job.id) {
+          reject(new Error(`Job falhou: ${failedReason}`));
+        }
+      });
+    });      
   } catch (error: any) {
     throw new Error(`Erro ao processar imagens: ${error.message || error}`);
   }

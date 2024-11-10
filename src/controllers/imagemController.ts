@@ -36,7 +36,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
     listaImagemProcessadas = await processarImagens(imagens) as Image[];
     console.log(listaImagemProcessadas);
   } catch (erro) {
-    res.status(500).json({ erro });
+    res.status(500).json({ erro: 'entrei aqui' });
     return;
   }
 
@@ -46,7 +46,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
       /* await relacionaImagemRequisicao(imagemProcessada.id, requisicao); */
     })
   } catch (error) {
-    res.status(500).json({error});
+    res.status(500).json({error: "entrei aqui 2"});
     return;
   } 
 

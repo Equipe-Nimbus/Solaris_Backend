@@ -9,6 +9,7 @@ import { AppDataSource } from "./config/data-source";
 import { carregaEnv } from "./utils";
 import requisicaoRoutes from "./routes/requisicaoRoutes";
 import { authenticateJWT } from "./middlewares";
+import "./services/imagemWorker";
 
 const PORT = carregaEnv("PORT");
 const app = express();
@@ -18,7 +19,6 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:8080",
-    "https://demo9989392.mockable.io/gerarMascaraTiff"
   ],
 }));
 
@@ -27,16 +27,16 @@ const swaggerDocument = YAML.parse(swaggerFile);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api/imagens", authenticateJWT, imagemRoutes);
+app.use("/api/imagens", /* authenticateJWT, */ imagemRoutes);
 app.use("/api/usuarios", userRoutes);
 app.use("/api/login", loginRoutes);
-app.use("/api/requisicao",  authenticateJWT, requisicaoRoutes)
+app.use("/api/requisicao",  /* authenticateJWT, */ requisicaoRoutes)
 
 AppDataSource.initialize()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Rodando na porta ${PORT}`);
-      console.log(`swagger: http://localhost:8000/api-docs`);
+      console.log(`swagger: http://localhost:8001/api-docs`);
     });
   })
   .catch((error) => console.log("Erro ao inicializar o banco de dados", error));
