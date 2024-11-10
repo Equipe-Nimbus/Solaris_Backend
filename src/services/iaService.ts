@@ -7,7 +7,7 @@ const queueEvents = new QueueEvents('imagemFila', { connection: redis });
 
 export const processarImagens = async (imagens: Image[]): Promise<Image[]> => {
   try {  
-    const job = await imagemFila.add('processarImagemJob', {imagens});
+    const job = await imagemFila.add('processarImagemJob', {imagens}, { removeOnComplete: true, removeOnFail: true });
    
   
     return new Promise((resolve, reject) => {

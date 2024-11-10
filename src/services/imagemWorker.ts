@@ -2,36 +2,35 @@ import { Worker } from "bullmq";
 import { Image } from "../types/image";
 import { redis } from "../config/redisConfig";
 import axios from "axios";
+import { getImageById } from "./imagem/getImageById";
+import { Imagem } from "../entity";
 
 const imagemWorker = new Worker(
   'imagemFila',
   async job => {
     const { imagens } = job.data;
     try {
-        imagemWorker.on('ready', () => {
-          console.log("Worker pronto e conectado à fila.");
-        });
-          
-        imagemWorker.on('error', (error) => {
-          console.error("Erro no Worker:", error);
-        });
-        console.log("Entrei no worker");
-        const imagensProcessadas: Image[] = [];
-  
+        const imagensProcessadas: Image[] = [];  
         let contador = 0;    
         let links: string[] = [];
-        imagens.forEach((imagem: Image) => {
-          if (imagem.mascara == undefined || imagem.mascara == null) {        
-            imagensProcessadas.push(imagem);
-            links.push(imagem.tiff);
-          } else {
-            imagensProcessadas.push(imagem);
-          }
-        });
-    
+
+        await Promise.all(imagens.map(async (imagem: Image) => {
+            const imagemSalva = await getImageById(imagem.id) as Imagem;
+            if(imagemSalva) {
+              if(imagemSalva.mascaras_imagem == undefined || imagemSalva.mascaras_imagem == null) {
+                imagensProcessadas.push(imagem);
+                links.push(imagem.tiff);
+              } else {
+                imagensProcessadas.push(imagem)
+              };              
+            } else {
+              imagensProcessadas.push(imagem);
+              links.push(imagem.tiff);
+            }
+          })
+        );
         if(links.length > 0) {
           const response = await axios.post('http://localhost:8080/geraMascaraThumbnail', { links });
-          console.log("response: ", response.data);
         
           const { download_links, pngs} = response.data;
         
@@ -54,11 +53,3 @@ const imagemWorker = new Worker(
   },
   { connection: redis }
 );
-
-imagemWorker.on('completed', job => {
-  console.log(`Job ${job.id} concluído com sucesso`);
-});
-
-imagemWorker.on('failed', (job, err) => {
-  console.error(`Job ${job?.id} falhou: ${err.message}`);
-});

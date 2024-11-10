@@ -20,7 +20,6 @@ export const obterImagens = async (bbox: string, datetime: string, requisicao: R
     const imagens = await Promise.all(featuresOrdenadas.map(async (feature: any) => {
       const imagemSalva = await getImageById(feature.id);
       if (imagemSalva) {
-        /* relacionaImagemRequisicao(imagemSalva.id_imagem, requisicao); */
         return {
           id: feature.id,
           thumbnail: feature.assets.thumbnail.href,
