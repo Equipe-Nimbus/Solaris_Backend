@@ -33,10 +33,9 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
 
   let listaImagemProcessadas: Image[];
   try {
-    listaImagemProcessadas = await processarImagens(imagens) as Image[];
-    console.log(listaImagemProcessadas);
+    listaImagemProcessadas = await processarImagens(imagens) as Image[];;
   } catch (erro) {
-    res.status(500).json({ erro });
+    res.status(500).json({ erro: "Erro ao porcesssar as imagens"});
     return;
   }
 
@@ -46,7 +45,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
       /* await relacionaImagemRequisicao(imagemProcessada.id, requisicao); */
     })
   } catch (error) {
-    res.status(500).json({error});
+    res.status(500).json({error: "Erro ao atualizar os links das imagens"});
     return;
   } 
 
