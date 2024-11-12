@@ -42,7 +42,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
   try {
     listaImagemProcessadas.forEach(async(imagemProcessada) => {
       await atualizaLinksImagem(imagemProcessada.mascara as string, imagemProcessada.download_links as string, imagemProcessada.id);
-      /* await relacionaImagemRequisicao(imagemProcessada.id, requisicao); */
+      await relacionaImagemRequisicao(imagemProcessada.id, requisicao);
     })
   } catch (error) {
     res.status(500).json({error: "Erro ao atualizar os links das imagens"});
