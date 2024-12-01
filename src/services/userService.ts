@@ -23,3 +23,15 @@ export const getUserByEmail = async (email_user: string): Promise<User | null> =
   
   return user || null;
 };
+
+export const getUserById = async (idUsuario: number): Promise<User | null> => {
+    const userRepositorio = AppDataSource.getRepository(User);
+  
+    const usuarioRecuperado = await userRepositorio.findOne({
+        where: {
+            id_user: idUsuario
+        },
+    })
+  
+    return usuarioRecuperado;
+};

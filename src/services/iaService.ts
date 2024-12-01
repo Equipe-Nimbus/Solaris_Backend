@@ -1,29 +1,59 @@
-import { Image } from '../types/image';
-import { Queue, QueueEvents } from 'bullmq';
-import { redis } from '../config/redisConfig';
+import axios from "axios";
+import { Imagem } from "../entity";
+import { Image } from "../types/image";
+import { getImageById } from "./imagemService";
 
-const imagemFila = new Queue('imagemFila', { connection: redis});
-const queueEvents = new QueueEvents('imagemFila', { connection: redis });
 
-export const processarImagens = async (imagens: Image[]): Promise<Image[]> => {
-  try {  
-    const job = await imagemFila.add('processarImagemJob', {imagens}, { removeOnComplete: true, removeOnFail: true });
-   
-  
-    return new Promise((resolve, reject) => {
-      queueEvents.on('completed', ({ jobId, returnvalue }) => {
-        if (jobId === job.id) {
-          resolve(returnvalue as unknown as Image[]);
+export const processarImagem = async(imagens: Image[]): Promise<Image[]> => {
+    try {
+        const imagensProcessadas: Image[] = [];  
+        let contador = 0;    
+        const links: string[] = [];
+
+        await Promise.all(imagens.map(async (imagem: Image) => {
+            const imagemSalva = await getImageById(imagem.id) as Imagem;
+            if(imagemSalva) {
+              if(imagemSalva.mascaras_imagem == undefined || imagemSalva.mascaras_imagem == null) {
+                imagensProcessadas.push(imagem);
+                links.push(imagem.tiff);
+              } else {
+                imagensProcessadas.push(imagem)
+              };              
+            } else {
+              imagensProcessadas.push(imagem);
+              links.push(imagem.tiff);
+            }
+          })
+        );
+        if(links.length > 0) {
+          const response = await axios.post('http://localhost:8080/geraMascara', { links });
+        
+          const resultadoPrevisao = response.data;
+
+          console.log(">>>>>>>>>>>><<<<<<<<<<<<");
+          console.log("RESULTADO IA;");
+          console.log(resultadoPrevisao);
+        
+          imagensProcessadas.forEach((imagem: Image) => {
+            if (imagem.mascara == null || imagem.mascara == undefined) {
+              const previsaoAtual = resultadoPrevisao[contador];
+              console.log(resultadoPrevisao.estatistica['fundo']);
+              console.log(resultadoPrevisao.estatistica['nuvem']);
+              console.log(resultadoPrevisao.estatistica['sombra']);
+              imagem.mascara = previsaoAtual['download_link'];
+              imagem.download_links = previsaoAtual['png_preview'];
+              imagem.estatistica_fundo = previsaoAtual['estatistica'].fundo;
+              imagem.estatistica_nuvem = previsaoAtual['estatistica'].nuvem;
+              imagem.estatistica_sombra = previsaoAtual['estatistica'].sombra;           
+              contador ++;
+            } else {
+              contador ++;
+            } 
+          })
         }
-      });
-  
-      queueEvents.on('failed', ({ jobId, failedReason }) => {
-        if (jobId === job.id) {
-          reject(new Error(`Job falhou: ${failedReason}`));
-        }
-      });
-    });      
-  } catch (error: any) {
-    throw new Error(`Erro ao processar imagens: ${error.message || error}`);
-  }
+      console.log(imagensProcessadas);
+      return imagensProcessadas;
+    } catch (error) {
+      throw new Error(`Erro ao processar imagens: ${error}`);
+    }
 };
