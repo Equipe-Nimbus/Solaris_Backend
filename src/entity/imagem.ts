@@ -22,6 +22,9 @@ export class Imagem {
   links_download_imagem: string;
 
   @Column('text', {nullable: true})
+  data_imagem_criacao: string
+
+  @Column('text', {nullable: true})
   estatistica_fundo: string;
 
   @Column('text', {nullable: true})

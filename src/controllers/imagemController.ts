@@ -43,7 +43,7 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
 
   try {
     listaImagemProcessadas.forEach(async(imagemProcessada) => {
-      await atualizaLinksImagem(imagemProcessada.mascara as string, imagemProcessada.download_links as string, imagemProcessada.id);
+      await atualizaLinksImagem(imagemProcessada.mascara as string, imagemProcessada.download_links as string, imagemProcessada.id, imagemProcessada.estatistica_fundo as string, imagemProcessada.estatistica_nuvem as string, imagemProcessada.estatistica_sombra as string);
       await relacionaImagemRequisicao(imagemProcessada.id, requisicao);
     })
   } catch (error) {
