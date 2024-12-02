@@ -1,7 +1,6 @@
-import { getRequisicaoByUser } from "../services/requisicaoService";
+import { getRequisicaoByUser, obterRequisicaoComImagens } from "../services/requisicaoService";
 import { Request, Response } from "express";
 import { ListaRequisicao } from "../types/requisicao";
-import { obterRequisicaoComImagens } from "../services/requisicao/montaRespostaHistorico";
 
 export const buscarRequisicoes = async (req: Request, res: Response): Promise<void> => {
     let id_usuario = parseInt(req.params.id_user);

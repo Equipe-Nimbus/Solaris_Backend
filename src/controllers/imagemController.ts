@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { atualizaLinksImagem, getUserById, obterImagens, processarImagens, relacionaImagemRequisicao } from "../services";
+import { atualizaLinksImagem, getUserById, obterImagens, relacionaImagemRequisicao, criarRequisicao, atualizaStatusRequisicao } from "../services";
 import { Image } from "../types/image";
-import { criarRequisicao } from "../services/requisicao/criaRequisicao";
 import { Requisicao } from "../entity";
-import { atualizaStatusRequisicao } from "../services/requisicao/atualizaStatusRequisicao";
+import { adiconaJobFila } from "../utils";
 
 export const buscarImagens = async (req: Request, res: Response): Promise<void> => {
   const { bbox, datetime, id } = req.query;
@@ -33,7 +32,10 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
 
   let listaImagemProcessadas: Image[];
   try {
-    listaImagemProcessadas = await processarImagens(imagens) as Image[];;
+    listaImagemProcessadas = await adiconaJobFila(imagens) as Image[];
+    console.log(">>>>>>>>>>>>>>><<<<<<<<<<<<<<<")
+    console.log("Lista no imagem controller")
+    console.log(listaImagemProcessadas);
   } catch (erro) {
     res.status(500).json({ erro: "Erro ao porcesssar as imagens"});
     return;
@@ -41,8 +43,8 @@ export const buscarImagens = async (req: Request, res: Response): Promise<void> 
 
   try {
     listaImagemProcessadas.forEach(async(imagemProcessada) => {
-      await atualizaLinksImagem(imagemProcessada.mascara as string, imagemProcessada.download_links as string, imagemProcessada.id);
-      /* await relacionaImagemRequisicao(imagemProcessada.id, requisicao); */
+      await atualizaLinksImagem(imagemProcessada.mascara as string, imagemProcessada.download_links as string, imagemProcessada.id, imagemProcessada.estatistica_fundo as string, imagemProcessada.estatistica_nuvem as string, imagemProcessada.estatistica_sombra as string);
+      await relacionaImagemRequisicao(imagemProcessada.id, requisicao);
     })
   } catch (error) {
     res.status(500).json({error: "Erro ao atualizar os links das imagens"});

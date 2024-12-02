@@ -21,6 +21,18 @@ export class Imagem {
   @Column('text', {nullable: true})
   links_download_imagem: string;
 
+  @Column('text', {nullable: true})
+  data_imagem_criacao: string
+
+  @Column('text', {nullable: true})
+  estatistica_fundo: string;
+
+  @Column('text', {nullable: true})
+  estatistica_nuvem: string;
+
+  @Column('text', {nullable: true})
+  estatistica_sombra: string;
+
   @ManyToMany(() => Requisicao, (requisicao) => requisicao.imagens)
   requisicoes: Requisicao[];
   }

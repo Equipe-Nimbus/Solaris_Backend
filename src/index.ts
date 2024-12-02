@@ -9,7 +9,6 @@ import { AppDataSource } from "./config/data-source";
 import { carregaEnv } from "./utils";
 import requisicaoRoutes from "./routes/requisicaoRoutes";
 import { authenticateJWT } from "./middlewares";
-import "./services/imagemWorker";
 
 const PORT = carregaEnv("PORT");
 const app = express();
