@@ -56,7 +56,7 @@ export const criarImagem = async (idImagem: string, bboxImagem: number[], linkIm
   };
 };
 
-export const atualizaLinksImagem = async (linkMascara: string, linkDownload: string, idImagem: string): Promise<void> => {
+export const atualizaLinksImagem = async (linkMascara: string, linkDownload: string, idImagem: string, estatistica_fundo: string, estatistica_nuvem: string, estatistica_sombra: string): Promise<void> => {
   const imagemRepositorio = AppDataSource.getRepository(Imagem);
   try {
       const imagemRecuperada = await getImageById(idImagem) as Imagem;
@@ -66,6 +66,9 @@ export const atualizaLinksImagem = async (linkMascara: string, linkDownload: str
                   set({
                       mascaras_imagem: linkMascara,
                       links_download_imagem: linkDownload,
+                      estatistica_fundo: estatistica_fundo,
+                      estatistica_nuvem: estatistica_nuvem,
+                      estatistica_sombra: estatistica_sombra
                   }).
                   where(
                       "id_imagem = :id", {id: imagemRecuperada.id_imagem} 

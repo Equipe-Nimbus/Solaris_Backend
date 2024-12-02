@@ -105,6 +105,7 @@ export const obterRequisicaoComImagens = async (id_requisicao: string) => {
           thumbnail: imagem.link_imagem_thumbnail,
           bbox: imagem.bbox_imagem,
           mascara: imagem.mascaras_imagem,
+          data_imagem_criacao: imagem.data_imagem_criacao,
           download_links: imagem.links_download_imagem,
           estatistica_fundo: imagem.estatistica_fundo,
           estatistica_nuvem: imagem.estatistica_nuvem,

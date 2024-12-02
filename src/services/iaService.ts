@@ -32,8 +32,8 @@ export const processarImagem = async(imagens: Image[]): Promise<Image[]> => {
           imagensProcessadas.map((imagem: Image) => {
             if (imagem.mascara == null || imagem.mascara == undefined) {
               const previsaoAtual = resultadoPrevisao.previsoes[contador];
-              imagem.mascara = previsaoAtual.download_link;
-              imagem.download_links = previsaoAtual.png_preview;
+              imagem.mascara = previsaoAtual.png_preview;
+              imagem.download_links = previsaoAtual.download_link;
               imagem.estatistica_fundo = previsaoAtual.estatistica.fundo;
               imagem.estatistica_nuvem = previsaoAtual.estatistica.nuvem;
               imagem.estatistica_sombra = previsaoAtual.estatistica.sombra;     
