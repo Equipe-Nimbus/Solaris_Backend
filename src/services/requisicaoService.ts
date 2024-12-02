@@ -105,7 +105,10 @@ export const obterRequisicaoComImagens = async (id_requisicao: string) => {
           thumbnail: imagem.link_imagem_thumbnail,
           bbox: imagem.bbox_imagem,
           mascara: imagem.mascaras_imagem,
-          download_links: imagem.links_download_imagem
+          download_links: imagem.links_download_imagem,
+          estatistica_fundo: imagem.estatistica_fundo,
+          estatistica_nuvem: imagem.estatistica_nuvem,
+          estatistica_sombra: imagem.estatistica_sombra,          
         }))
       };
   

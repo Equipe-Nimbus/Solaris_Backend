@@ -6,19 +6,17 @@ import axios from "axios";
 
 export const obterImagens = async (bbox: string, datetime: string, requisicao: Requisicao): Promise<Image[] | void> => {
   try {    
-    /* const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}`; */
-    const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&datetime=2024-11-09/2024-10-09&bbox=-41.692804,-3.680555,-40.697701,-2.706174&limit=1`;
+    const url = `https://data.inpe.br/bdc/stac/v1/search?collections=CB4A-WPM-PCA-FUSED-1&bbox=${bbox}&datetime=${datetime}`;
     const dados = await api(url);
   
-    // Ordenar pela data
     const features = dados.features;
-    /* const featuresOrdenadas = dados.features.sort((a: any, b: any) => {
+    const featuresOrdenadas = dados.features.sort((a: any, b: any) => {
       const dataA = new Date(a.properties.datetime);
       const dataB = new Date(b.properties.datetime);
       return dataA.getTime() - dataB.getTime();
-    }); */
+    });
   
-    const imagens = await Promise.all(features.map(async (feature: any) => {
+    const imagens = await Promise.all(featuresOrdenadas.map(async (feature: any) => {
       const imagemSalva = await getImageById(feature.id);
       if (imagemSalva) {
         return {

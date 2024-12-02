@@ -6,9 +6,9 @@ import { getImageById } from "./imagemService";
 
 export const processarImagem = async(imagens: Image[]): Promise<Image[]> => {
     try {
-        const imagensProcessadas: Image[] = [];  
-        let contador = 0;    
+        const imagensProcessadas: Image[] = [];     
         const links: string[] = [];
+        let contador: number = 0;
 
         await Promise.all(imagens.map(async (imagem: Image) => {
             const imagemSalva = await getImageById(imagem.id) as Imagem;
@@ -26,32 +26,23 @@ export const processarImagem = async(imagens: Image[]): Promise<Image[]> => {
           })
         );
         if(links.length > 0) {
-          const response = await axios.post('http://localhost:8080/geraMascara', { links });
-        
-          const resultadoPrevisao = response.data;
-
-          console.log(">>>>>>>>>>>><<<<<<<<<<<<");
-          console.log("RESULTADO IA;");
-          console.log(resultadoPrevisao);
-        
-          imagensProcessadas.forEach((imagem: Image) => {
+          const response = await axios.post('http://localhost:8080/geraMascara', {links});
+          const resultadoPrevisao = response.data;          
+          
+          imagensProcessadas.map((imagem: Image) => {
             if (imagem.mascara == null || imagem.mascara == undefined) {
-              const previsaoAtual = resultadoPrevisao[contador];
-              console.log(resultadoPrevisao.estatistica['fundo']);
-              console.log(resultadoPrevisao.estatistica['nuvem']);
-              console.log(resultadoPrevisao.estatistica['sombra']);
-              imagem.mascara = previsaoAtual['download_link'];
-              imagem.download_links = previsaoAtual['png_preview'];
-              imagem.estatistica_fundo = previsaoAtual['estatistica'].fundo;
-              imagem.estatistica_nuvem = previsaoAtual['estatistica'].nuvem;
-              imagem.estatistica_sombra = previsaoAtual['estatistica'].sombra;           
+              const previsaoAtual = resultadoPrevisao.previsoes[contador];
+              imagem.mascara = previsaoAtual.download_link;
+              imagem.download_links = previsaoAtual.png_preview;
+              imagem.estatistica_fundo = previsaoAtual.estatistica.fundo;
+              imagem.estatistica_nuvem = previsaoAtual.estatistica.nuvem;
+              imagem.estatistica_sombra = previsaoAtual.estatistica.sombra;     
               contador ++;
             } else {
               contador ++;
             } 
           })
         }
-      console.log(imagensProcessadas);
       return imagensProcessadas;
     } catch (error) {
       throw new Error(`Erro ao processar imagens: ${error}`);
